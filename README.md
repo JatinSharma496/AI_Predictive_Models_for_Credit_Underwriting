@@ -160,5 +160,3 @@ The model demonstrates high accuracy in predicting loan approvals, with feature 
 Thank you for reading! If you like my project, feel free to give a ⭐ on GitHub!
 
 ---
-
-This README is now more cohesive and professional. Let me know if you need any further adjustments!

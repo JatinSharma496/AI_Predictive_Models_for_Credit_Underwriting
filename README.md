@@ -2,95 +2,175 @@
 
 ---
 
-# **AI Predictive models for Credit Underwriting**
+# AI Predictive Models for Credit Underwriting
 
-A machine learning-based solution to predict loan approvals based on applicant details, financial history, and loan attributes. This project includes feature importance analysis, model training, and a user-friendly web application for real-time predictions.
+This project leverages machine learning to automate loan eligibility assessments based on applicant details, financial history, and loan attributes. It includes feature importance analysis, model training, and both a Flask API and a Streamlit web application for real-time predictions.
 
----
+## Table of Contents
 
-## **Table of Contents**
 1. [Introduction](#introduction)  
 2. [Features](#features)  
 3. [Technologies Used](#technologies-used)  
 4. [Dataset](#dataset)  
 5. [Model and Approach](#model-and-approach)  
 6. [Web Application](#web-application)  
-7. [Installation](#installation)  
-8. [Usage](#usage)  
-9. [Results](#results)  
-10. [Future Enhancements](#future-enhancements)  
-11. [Contributing](#contributing)  
-12. [License](#license)  
+7. [Flask API](#flask-api)  
+8. [Installation](#installation)  
+9. [Usage](#usage)  
+10. [Results](#results)  
+11. [Future Enhancements](#future-enhancements)  
+12. [Learning Resources](#learning-resources)
+13. [License](#license)  
 
----
+## Introduction
 
-## **Introduction**  
-Loan approval decisions are critical for financial institutions. This project leverages machine learning to automate loan eligibility assessments based on historical data. The system provides quick and accurate predictions, aiding lenders in minimizing risks and improving efficiency.
+Loan approval decisions are critical for financial institutions. This project automates the assessment process using machine learning, providing quick and accurate predictions to aid lenders in minimizing risks and improving efficiency.
 
----
+## Features
 
-## **Features**
-- Predicts loan approval using a Gradient Boosting model.
-- Provides real-time predictions via a Streamlit web app.
-- Displays feature importance for transparency.
-- Robust handling of missing or invalid inputs.
+- **Predictive Modeling**: Uses a Light Gradient Boosting model to predict loan approval (approx 93% accuracy, approx 82% F1-score).
+- **Real-Time Predictions**: Offers predictions via both a Flask API and a Streamlit web application.
+- **Feature Importance Analysis**: Highlights key factors influencing loan approval decisions.
+- **Robust Input Handling**: Manages missing or invalid inputs effectively.
 
----
+## Technologies Used
 
-## **Technologies Used**
-- **Programming Language**: Python  
+- **Programming Language**: Python
 - **Libraries**:
-  - Machine Learning: `scikit-learn`, `numpy`, `pandas`
-  - Visualization: `matplotlib`, `seaborn`
-  - Web App: `streamlit`
-- Deployment-ready for local and cloud hosting.
+  - **Machine Learning**: `scikit-learn`, `numpy`, `pandas`, `lightgbm`
+  - **Visualization**: `matplotlib`, `seaborn`
+  - **Web Application**: `streamlit`, `flask`
+- **Deployment**: Docker, Gunicorn, Nginx
 
----
+## Dataset
 
-## **Dataset**
-- **Source**: to be filles  
+- **Source**: [Dataset Source](#)
 - **Attributes**:
-  - Demographic: `person_age`, `person_income`, `person_emp_length`
-  - Loan details: `loan_amnt`, `loan_int_rate`, `loan_intent`, `loan_grade`
-  - Credit history: `cb_person_cred_hist_length`, `cb_person_default_on_file`
-  - Categorical attributes are one-hot encoded for machine learning compatibility.
+  - **Demographic**: `person_age`, `person_income`, `person_emp_length`, `person_home_ownership`
+  - **Loan Details**: `loan_amnt`, `loan_int_rate`, `loan_intent`, `loan_grade`
+  - **Credit History**: `cb_person_cred_hist_length`, `cb_person_default_on_file`
+- Categorical attributes are one-hot encoded for machine learning compatibility.
 
----
+## Model and Approach
 
-## **Model and Approach**
 1. **Data Preprocessing**:
    - Handled missing values and encoded categorical features.
    - Scaled numerical features for consistent model input.
 
 2. **Model**:
-   - to be filled in future 
-   - **Gradient Boosting** chosen for its accuracy and interpretability.
-   - Features like `person_income` and `loan_amnt` were identified as most important.
+   - Trained using multiple classification algorithms, including Logistic Regression, SVC, Random Forest, AdaBoost, CatBoost, LightGBM, and Gradient Boosting.
+   - **Final Model**: Light Gradient Boosting (LightGBM) was selected for its high accuracy and interpretability.
 
-4. **Evaluation**:
+3. **Evaluation**:
    - Metrics: Accuracy, Precision, Recall, F1-Score.
-   - to bve filled
+   - LightGBM achieved approximately 93% accuracy and 82% F1-score.
 
-5. **Deployment**:
+4. **Deployment**:
    - Streamlit-based app for user-friendly predictions.
+   - Flask API for integration with other applications.
 
----
+## Web Application
 
-## **Web Application**
-The web application allows users to input loan details and view predictions.  
+The Streamlit web application allows users to input loan details and view predictions.
 
-### **Key Features**:
+### Key Features:
 - Intuitive form-based input for loan attributes.
 - Instant predictions with explanations.
-- Caches model resources for efficiency.  
 
-### **Screenshots**:  
-_TO be uploaded later_
+### Live Demo:
+[AI Predictive Models for Credit Underwriting - Streamlit App](https://jatinsharma496-ai-predictive-models-for-credit-under-app-vbp9fd.streamlit.app/)
+
+## Flask API
+
+The Flask API provides endpoints for integrating the loan prediction model into other applications.
+
+### Key Features:
+- POST endpoint to receive loan details and return predictions.
+- Handles JSON input and output.
+- Error handling for invalid inputs.
+
+### Example Request:
+
+```bash
+curl -X POST -H "Content-Type: application/json" -d '{
+    "person_age": 21,
+    "person_income": 9600,
+    "person_home_ownership": "OWN",
+    "person_emp_length": 5.0,
+    "loan_intent": "EDUCATION",
+    "loan_grade": "B",
+    "loan_amnt": 1000,
+    "loan_int_rate": 11.02,
+    "cb_person_default_on_file": "N",
+    "cb_person_cred_hist_length": 3
+}' http://localhost:5000/predict
+```
+
+### Example Response:
+
+```json
+{
+  "prediction": "Approved"
+}
+```
+
+## Installation
+
+1. **Clone the Repository**:
+
+   ```bash
+   git clone https://github.com/JatinSharma496/AI_Predictive_Models_for_Credit_Underwriting.git
+   cd AI_Predictive_Models_for_Credit_Underwriting
+   ```
+
+2. **Set Up Virtual Environment**:
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install Dependencies**:
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Run the Flask API**:
+
+   ```bash
+   python app.py
+   ```
+
+5. **Run the Streamlit App**:
+
+   ```bash
+   streamlit run app.py
+   ```
+
+## Usage
+
+- **Flask API**: Send POST requests to `http://localhost:5000/predict` with loan details in JSON format or use Postman.
+- **Streamlit App**: Navigate to `http://localhost:8501` in your browser to input loan details and receive predictions.
+
+## Results
+
+The model demonstrates high accuracy in predicting loan approvals, with feature importance analysis highlighting key factors such as `person_income` and `loan_amnt`.
+
+## Future Enhancements
+
+- Integrate additional data sources for improved predictions.
+- Implement user authentication for the web application.
+
+## Learning Resources:
+
+- [YouTube Playlist on Machine Learning](https://youtube.com/playlist?list=PLKnIA16_Rmvbr7zKYQuBfsVkjoLcJgxHH&si=QWJRhsnFwu6etoRT)
+- [GeeksforGeeks - LightGBM](https://www.geeksforgeeks.org/lightgbm-light-gradient-boosting-machine/)
+- [Kaggle Learn Courses](https://www.kaggle.com/learn)
+---
+## License:
+ - This project is licensed under the MIT License - see the [LICENSE](https://github.com/JatinSharma496/AI_Predictive_Models_for_Credit_Underwriting/blob/main/LICENSE) file for details.
+
+Thank you for reading! If you like my project, feel free to give a ⭐ on GitHub!
 
 ---
-
-## **Installation**
-Follow these steps to run the project locally:  
-
-to be filled later
-

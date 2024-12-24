@@ -19,7 +19,8 @@ This project leverages machine learning to automate loan eligibility assessments
 9. [Usage](#usage)  
 10. [Results](#results)  
 11. [Future Enhancements](#future-enhancements)  
-12. [Learning Resources](#learning-resources)  
+12. [Learning Resources](#learning-resources)
+13. [License](#license)  
 
 ## Introduction
 
@@ -167,6 +168,8 @@ The model demonstrates high accuracy in predicting loan approvals, with feature 
 - [GeeksforGeeks - LightGBM](https://www.geeksforgeeks.org/lightgbm-light-gradient-boosting-machine/)
 - [Kaggle Learn Courses](https://www.kaggle.com/learn)
 ---
+## License:
+ - This project is licensed under the MIT License - see the [LICENSE]() file for details.
 
 Thank you for reading! If you like my project, feel free to give a ⭐ on GitHub!
 

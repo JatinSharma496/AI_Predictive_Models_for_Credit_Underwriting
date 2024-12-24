@@ -24,7 +24,7 @@ Loan approval decisions are critical for financial institutions. This project au
 
 ## Features
 
-- **Predictive Modeling**: Utilizes a Light Gradient Boosting model to predict loan approval.
+- **Predictive Modeling**: Uses Pipelines mechanism and Utilizes a Light Gradient Boosting model to predict loan approval.(approx 93% accuracy , aprrox 82% f1-score)
 - **Real-Time Predictions**: Offers predictions via both a Flask API and a Streamlit web application.
 - **Feature Importance Analysis**: Highlights key factors influencing loan approval decisions.
 - **Robust Input Handling**: Manages missing or invalid inputs effectively.
@@ -33,7 +33,7 @@ Loan approval decisions are critical for financial institutions. This project au
 
 - **Programming Language**: Python
 - **Libraries**:
-  - **Machine Learning**: `scikit-learn`, `numpy`, `pandas`
+  - **Machine Learning**: `scikit-learn`, `numpy`, `pandas`,`lightgbm`
   - **Visualization**: `matplotlib`, `seaborn`
   - **Web Application**: `streamlit`, `flask`
 - **Deployment**: Docker, Gunicorn, Nginx
@@ -42,7 +42,7 @@ Loan approval decisions are critical for financial institutions. This project au
 
 - **Source**: [Dataset Source](#)
 - **Attributes**:
-  - **Demographic**: `person_age`, `person_income`, `person_emp_length`
+  - **Demographic**: `person_age`, `person_income`, `person_emp_length`,`person_home_ownership`
   - **Loan Details**: `loan_amnt`, `loan_int_rate`, `loan_intent`, `loan_grade`
   - **Credit History**: `cb_person_cred_hist_length`, `cb_person_default_on_file`
 - Categorical attributes are one-hot encoded for machine learning compatibility.
@@ -54,11 +54,13 @@ Loan approval decisions are critical for financial institutions. This project au
    - Scaled numerical features for consistent model input.
 
 2. **Model**:
-   - Gradient Boosting chosen for its accuracy and interpretability.
-   - Features like `person_income` and `loan_amnt` were identified as most important.
+   - training is done with multiple classifaction algorithm like logistic regression , svc , randomforest , adaboost , catboost , lightgm , gradient boosting etc
 
 3. **Evaluation**:
-   - Metrics: Accuracy, Precision, Recall, F1-Score.
+   - Metrics: Accuracy, Precision, Recall, F1-Score .
+4. ""Selection**:
+   - Hyperparamter tuning .
+   - Learning curve.
 
 4. **Deployment**:
    - Streamlit-based app for user-friendly predictions.
@@ -72,7 +74,6 @@ The Streamlit web application allows users to input loan details and view predic
 
 - Intuitive form-based input for loan attributes.
 - Instant predictions with explanations.
-- Caches model resources for efficiency.
 
 ### Live Demo : 
 

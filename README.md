@@ -24,7 +24,7 @@ Loan approval decisions are critical for financial institutions. This project au
 
 ## Features
 
-- **Predictive Modeling**: Utilizes a Gradient Boosting model to predict loan approval.
+- **Predictive Modeling**: Utilizes a Light Gradient Boosting model to predict loan approval.
 - **Real-Time Predictions**: Offers predictions via both a Flask API and a Streamlit web application.
 - **Feature Importance Analysis**: Highlights key factors influencing loan approval decisions.
 - **Robust Input Handling**: Manages missing or invalid inputs effectively.
@@ -74,9 +74,10 @@ The Streamlit web application allows users to input loan details and view predic
 - Instant predictions with explanations.
 - Caches model resources for efficiency.
 
-### Screenshots:
+### Live Demo : 
 
-![Streamlit App Screenshot](#)
+https://jatinsharma496-ai-predictive-models-for-credit-under-app-vbp9fd.streamlit.app/
+
 
 ## Flask API
 
@@ -138,7 +139,7 @@ curl -X POST -H "Content-Type: application/json" -d '{"person_age": 30, "person_
 
 ## Usage
 
-- **Flask API**: Send POST requests to `http://localhost:5000/predict` with loan details in JSON format.
+- **Flask API**: Send POST requests to `http://localhost:5000/predict` with loan details in JSON format or use Postman.
 - **Streamlit App**: Navigate to `http://localhost:8501` in your browser to input loan details and receive predictions.
 
 ## Results
@@ -149,4 +150,5 @@ The model demonstrates high accuracy in predicting loan approvals, with feature 
 
 - Integrate additional data sources for improved predictions.
 - Implement user authentication for the web application.
-- 
+
+  # Thankyou for reading , if you like my project give me star ion github

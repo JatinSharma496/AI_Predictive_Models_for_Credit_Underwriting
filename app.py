@@ -23,7 +23,7 @@ col1, col2 = st.columns(2)
 with col1:
     person_income = st.number_input("Income of Applicant ($)", min_value=0, value=50000, step=1000)
     loan_amnt = st.number_input("Loan Amount ($)", min_value=0, value=10000, step=500)
-    loan_int_rate = st.slider("Interest Rate (%)", min_value=0.0, max_value=100.0, value=5.0, step=0.1)
+    loan_int_rate = st.slider("Interest Rate (%)", min_value=0.0, max_value=100.0, value=5.0, step=0.01)
     person_emp_length = st.number_input("Employment Length (years)", min_value=0, max_value=50, value=5)
 
 with col2:

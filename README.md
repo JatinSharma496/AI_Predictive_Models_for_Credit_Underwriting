@@ -91,7 +91,18 @@ The Flask API provides endpoints for integrating the loan prediction model into 
 ### Example Request:
 
 ```bash
-curl -X POST -H "Content-Type: application/json" -d '{"person_age": 30, "person_income": 50000, "loan_amnt": 20000, "loan_int_rate": 5.5, "loan_grade": "A"}' http://localhost:5000/predict
+curl -X POST -H "Content-Type: application/json" -d '{
+    "person_age": 21,
+    "person_income": 9600,
+    "person_home_ownership": "OWN",
+    "person_emp_length": 5.0,
+    "loan_intent": "EDUCATION",
+    "loan_grade": "B",
+    "loan_amnt": 1000,
+    "loan_int_rate": 11.02,
+    "cb_person_default_on_file": "N",
+    "cb_person_cred_hist_length": 3
+}' http://localhost:5000/predict
 ```
 
 ### Example Response:

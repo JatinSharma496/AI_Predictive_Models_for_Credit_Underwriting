@@ -2,7 +2,7 @@
 
 ---
 
-# **AI Predictive models for Credit Underwriting **
+# **AI Predictive models for Credit Underwriting**
 
 A machine learning-based solution to predict loan approvals based on applicant details, financial history, and loan attributes. This project includes feature importance analysis, model training, and a user-friendly web application for real-time predictions.
 

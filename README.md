@@ -169,7 +169,7 @@ The model demonstrates high accuracy in predicting loan approvals, with feature 
 - [Kaggle Learn Courses](https://www.kaggle.com/learn)
 ---
 ## License:
- - This project is licensed under the MIT License - see the [LICENSE]() file for details.
+ - This project is licensed under the MIT License - see the [LICENSE](https://github.com/JatinSharma496/AI_Predictive_Models_for_Credit_Underwriting/blob/main/LICENSE) file for details.
 
 Thank you for reading! If you like my project, feel free to give a ⭐ on GitHub!
 

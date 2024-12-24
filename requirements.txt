@@ -1,0 +1,8 @@
+numpy
+pandas
+sklearn
+catboost
+seaborn
+flask
+streamlit
+ipykernel

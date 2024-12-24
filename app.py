@@ -36,7 +36,7 @@ with col2:
     )
 
 loan_grade = st.selectbox("Loan Grade", ["A", "B", "C", "D", "E", "F", "G"])
-cb_person_default_on_file = st.sidebar.selectbox("Default on File", ["N", "Y"], help="Has the applicant defaulted before?")
+cb_person_default_on_file = st.selectbox("Default on File", ["N", "Y"], help="Has the applicant defaulted before?")
 
 # Prepare input data for prediction
 user_input = pd.DataFrame({

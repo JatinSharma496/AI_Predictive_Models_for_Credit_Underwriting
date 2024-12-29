@@ -157,7 +157,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 The model demonstrates high accuracy in predicting loan approvals, with feature importance analysis highlighting key factors such as `person_income` and `loan_amnt`.
 
-![Architecture](Images/architecture.png)
+![Architecture](Images/Architecture.png)
 
 ![Methodology](Images/Methodology.jpeg)
 

@@ -3,6 +3,10 @@ import pickle
 import json
 import pandas as pd
 from groq import Groq
+import os 
+
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))  
+MODEL = 'llama3-groq-70b-8192-tool-use-preview'
 
 def load_model():
     try:
@@ -60,9 +64,6 @@ def show():
             {"role": "assistant", "content": "Hello! I'm your loan eligibility assistant. I can help you check if you're eligible for a loan. Would you like to proceed with the assessment?"}
         ]
 
-    # Initialize Groq client
-    client = Groq(api_key="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")  # Replace with your API key
-    MODEL = 'llama3-groq-70b-8192-tool-use-preview'
 
     # Chat interface
     chat_container = st.container()

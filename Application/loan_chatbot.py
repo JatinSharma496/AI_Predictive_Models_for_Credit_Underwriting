@@ -8,13 +8,13 @@ import os
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))  
 MODEL = 'llama3-groq-70b-8192-tool-use-preview'
 
+@st.cache_resource
 def load_model():
     try:
-        with open('Model_pipeline.pkl', 'rb') as file:
-            model = pickle.load(file)
-        return model
-    except Exception as e:
-        st.error(f"Error loading model: {str(e)}")
+        model_path = 'Application\Model_pipeline.pkl'  # Relative to Application folder
+        return pickle.load(open(model_path, 'rb'))
+    except FileNotFoundError:
+        st.error("Model file not found. Please ensure 'Model_pipeline.pkl' is in the correct directory.")
         return None
 
 def get_loan_eligibility(person_age, person_income, person_home_ownership, person_emp_length,
@@ -50,6 +50,35 @@ def get_loan_eligibility(person_age, person_income, person_home_ownership, perso
     except Exception as e:
         return {"error": f"Failed to process loan eligibility: {str(e)}"}
 
+def get_initial_messages():
+    return [
+        {
+            "role": "system",
+            "content": (
+                """You are a loan eligibility assistant. 
+                Your role is to provide users with detailed, polite, and clear information about their loan eligibility predictions. 
+                Gather the required user details step by step, asking one question at a time,
+                and avoid requesting all the information at once.
+                Only after collecting all the necessary details, proceed to predict the loan eligibility."""
+            )
+        },
+        {
+            "role": "assistant",
+            "content": "Hello! I'm your loan eligibility assistant. I can help you check if you're eligible for a loan. Would you like to proceed with the assessment?"
+        }
+    ]
+
+def reset_conversation_state():
+   
+    # Clear all conversation-related session state
+    st.session_state.messages = get_initial_messages()
+    st.session_state.current_step = "start"
+    st.session_state.collected_data = {}
+    # Clear any other related session state variables you might have
+    for key in list(st.session_state.keys()):
+        if key.startswith('chat_'):  # Clear any chat-related state
+            del st.session_state[key]
+
 def show():
     st.title("🤖 Loan Prediction (GenAI Chatbot)")
     st.markdown("""
@@ -57,41 +86,20 @@ def show():
     Simply answer the questions, and the chatbot will guide you.
     """)
 
-    # Initialize session state variables
+    # Initialize session state variables if they don't exist
     if "messages" not in st.session_state:
-        st.session_state.messages = []
+        st.session_state.messages = get_initial_messages()
         st.session_state.current_step = "start"
         st.session_state.collected_data = {}
         
-        # Add system message to guide the assistant but do not show it on the frontend
-        st.session_state.messages.append({
-            "role": "system", 
-            "content": """You are a helpful loan eligibility assistant. Your task is to guide users through a loan eligibility check by asking relevant questions and using a pre-trained machine learning model to assess whether they qualify for a loan based on their provided data. 
-            You should  clear, and concise in your responses.Make sure to follow the structured flow and
-             and ask question one by one while also displaying previous response and if user ask something about question
-             briefly explains the question and dont move further until the user response to the question."""
-        })
-        
-        # The first assistant message shown to the user
-        st.session_state.messages.append({
-            "role": "assistant", 
-            "content": "Hello! I'm your loan eligibility assistant. I can help you check if you're eligible for a loan. Would you like to proceed with the assessment?"
-        })
-
     # Handle "Start New Conversation" button
-    if st.sidebar.button("Start New Conversation"):
-        st.session_state.messages = []
-        st.session_state.current_step = "start"
-        st.session_state.collected_data = {}
-        st.session_state.messages.append({
-            "role": "assistant", 
-            "content": "Hello! I'm your loan eligibility assistant. I can help you check if you're eligible for a loan. Would you like to proceed with the assessment?"
-        })
-        st.rerun()
+    if st.sidebar.button("Start New Conversation", key='reset_button'):
+        reset_conversation_state()
+        st.rerun()  # Force a complete rerun of the app
 
-    # Display chat messages (only user and assistant messages)
+    # Display chat messages
     for message in st.session_state.messages:
-        if message["role"] != "system":  # Don't display system messages in the UI
+        if message["role"] != "system":  # Skip system messages
             with st.chat_message(message["role"]):
                 st.write(message["content"])
 
@@ -246,5 +254,3 @@ def show():
                     error_message = f"Sorry, I encountered an error: {str(e)}"
                     st.error(error_message)
                     st.session_state.messages.append({"role": "assistant", "content": error_message})
-if __name__ == "__main__":
-    show()

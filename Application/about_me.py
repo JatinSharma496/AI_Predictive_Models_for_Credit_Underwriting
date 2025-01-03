@@ -11,5 +11,3 @@ def show():
 
     st.markdown("Feel free to reach out via email: heyiamjatin001@gmail.com")
 
-if __name__ == "__main__":
-    show()

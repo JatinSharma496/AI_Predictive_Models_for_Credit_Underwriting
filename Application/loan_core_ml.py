@@ -2,11 +2,9 @@ import streamlit as st
 import pandas as pd
 import pickle
 
-# Load model
-@st.cache_resource
 def load_model():
     try:
-        return pickle.load(open('Model_pipeline.pkl', 'rb'))
+        return pickle.load(open('Application/Model_pipeline.pkl', 'rb'))
     except FileNotFoundError:
         st.error("Model file not found. Please ensure 'Model_pipeline.pkl' is in the correct directory.")
         return None
@@ -63,5 +61,3 @@ def show():
                     )
             except Exception as e:
                 st.error(f"Error during prediction: {e}")
-if __name__ == "__main__":
-    show()

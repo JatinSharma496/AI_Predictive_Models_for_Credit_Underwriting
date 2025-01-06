@@ -199,4 +199,3 @@ def show():
                 "role": "assistant",
                 "content": error_message
             })
-

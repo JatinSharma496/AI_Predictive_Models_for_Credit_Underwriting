@@ -6,7 +6,7 @@ from groq import Groq
 import os 
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))  
-MODEL = 'llama3-groq-70b-8192-tool-use-preview'
+MODEL = 'llama-3.3-70b-versatile'
 
 @st.cache_resource
 def load_model():
@@ -59,7 +59,9 @@ def get_initial_messages():
                 Your role is to provide users with detailed, polite, and clear information about their loan eligibility predictions. 
                 Gather the required user details step by step, asking one question at a time,
                 and avoid requesting all the information at once.
-                Only after collecting all the necessary details, proceed to predict the loan eligibility."""
+                Only after collecting all the necessary details,
+                 proceed to predict the loan eligibility.
+                 make the string arguments uppercase """
             )
         },
         {

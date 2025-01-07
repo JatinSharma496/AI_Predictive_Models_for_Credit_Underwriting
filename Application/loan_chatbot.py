@@ -8,7 +8,7 @@ from styles import apply_styles
 from chatbot_prompt import get_initial_messages
 
 
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))  
+client = Groq(api_key=os.environ.get("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"))  
 MODEL = 'gemma2-9b-it'
 
 

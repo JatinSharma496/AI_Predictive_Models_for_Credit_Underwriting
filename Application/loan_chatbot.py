@@ -9,7 +9,7 @@ from chatbot_prompt import get_initial_messages
 
 
 client = Groq(api_key="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")  
-MODEL = 'gemma2-9b-it'
+MODEL = 'llama-3.3-70b-versatile'
 
 
 @st.cache_resource

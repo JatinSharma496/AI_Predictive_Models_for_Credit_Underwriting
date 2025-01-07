@@ -7,9 +7,8 @@ import os
 from styles import apply_styles
 
 
-# Initialize Groq client
-client = Groq(api_key=os.environ.get("GROQ_API_KEY"))
-MODEL = 'llama3-groq-70b-8192-tool-use-preview'
+client = Groq(api_key=os.environ.get("GROQ_API_KEY"))  
+MODEL = 'llama-3.3-70b-versatile'
 
 @st.cache_resource
 def load_model():
@@ -54,7 +53,26 @@ def get_loan_default_risk(person_age, person_income, person_home_ownership, pers
     except Exception as e:
         return {"error": f"Failed to process loan eligibility: {str(e)}"}
 
-        
+def get_initial_messages():
+    return [
+        {
+            "role": "system",
+            "content": (
+                """You are a loan eligibility assistant. 
+                Your role is to provide users with detailed, polite, and clear information about their loan eligibility predictions. 
+                Gather the required user details step by step, asking one question at a time,
+                and avoid requesting all the information at once.
+                Only after collecting all the necessary details,
+                 proceed to predict the loan eligibility.
+                 make the string arguments uppercase """
+            )
+        },
+        {
+            "role": "assistant",
+            "content": "Hello! I'm your loan eligibility assistant. I can help you check if you're eligible for a loan. Would you like to proceed with the assessment?"
+        }
+    ]
+
 def reset_conversation_state():
    
     # Clear all conversation-related session state

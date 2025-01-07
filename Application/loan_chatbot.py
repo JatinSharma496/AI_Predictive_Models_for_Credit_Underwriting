@@ -15,10 +15,14 @@ MODEL = 'gemma2-9b-it'
 @st.cache_resource
 def load_model():
     try:
-        model_path ='Model_pipeline.pkl'  # Relative to Application folder
-        return pickle.load(open(model_path, 'rb'))
-    except FileNotFoundError:
-        st.error("Model file not found. Please ensure 'Model_pipeline.pkl' is in the correct directory.")
+        model_path = os.path.join('Application', 'Model_pipeline.pkl')
+        if not os.path.exists(model_path):
+            raise FileNotFoundError(f"Model file not found at {model_path}")
+        
+        with open(model_path, 'rb') as f:
+            return pickle.load(f)
+    except Exception as e:
+        st.error(f"Error loading model: {str(e)}")
         return None
 
 

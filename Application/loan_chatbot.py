@@ -1,26 +1,30 @@
 import streamlit as st
-import pandas as pd
 import pickle
 import json
+import pandas as pd
 from groq import Groq
-import os
+import os 
 from styles import apply_styles
+from chatbot_prompt import get_initial_messages
 
 
 client = Groq(api_key=os.environ.get("GROQ_API_KEY"))  
-MODEL = 'llama-3.3-70b-versatile'
+MODEL = 'gemma2-9b-it'
+
 
 @st.cache_resource
 def load_model():
     try:
-        model_path = 'Application/Model_pipeline.pkl'
+        model_path = 'Application\Model_pipeline.pkl'  # Relative to Application folder
         return pickle.load(open(model_path, 'rb'))
     except FileNotFoundError:
         st.error("Model file not found. Please ensure 'Model_pipeline.pkl' is in the correct directory.")
         return None
 
 
-def get_loan_default_risk(person_age, person_income, person_home_ownership, person_emp_length,
+
+
+def get_loan_eligibility(person_age, person_income, person_home_ownership, person_emp_length,
                         loan_intent, loan_grade, loan_amnt, loan_int_rate,
                         cb_person_default_on_file, cb_person_cred_hist_length):
     try:
@@ -46,32 +50,14 @@ def get_loan_default_risk(person_age, person_income, person_home_ownership, pers
         result = {
             "default_risk": bool(prediction),
             "input_data": user_input.to_dict(orient='records')[0],
-            "message": "High Default Risk" if prediction else "Low Default Risk"
+            "message": "High default risk" if prediction else "Low default risk"
         }
         
         return result
     except Exception as e:
         return {"error": f"Failed to process loan eligibility: {str(e)}"}
 
-def get_initial_messages():
-    return [
-        {
-            "role": "system",
-            "content": (
-                """You are a loan eligibility assistant. 
-                Your role is to provide users with detailed, polite, and clear information about their loan eligibility predictions. 
-                Gather the required user details step by step, asking one question at a time,
-                and avoid requesting all the information at once.
-                Only after collecting all the necessary details,
-                 proceed to predict the loan eligibility.
-                 make the string arguments uppercase """
-            )
-        },
-        {
-            "role": "assistant",
-            "content": "Hello! I'm your loan eligibility assistant. I can help you check if you're eligible for a loan. Would you like to proceed with the assessment?"
-        }
-    ]
+
 
 def reset_conversation_state():
    
@@ -85,25 +71,8 @@ def reset_conversation_state():
             del st.session_state[key]
 
 
-def get_initial_messages():
-    return [
-        {
-            "role": "system",
-            "content": (
-                """You are a loan default risk advisor. 
-                Your role is to provide the bank  with detailed, polite, and clear information about their loan defauly predictions. 
-                Gather the required applicant details step by step, asking one question at a time,
-                and avoid requesting all the information at once.
-                Only after collecting all the necessary details, proceed to predict the loan default risk
-                convert into upper case for string value type arguments
-                After the result display feedback as well."""
-            )
-        },
-        {
-            "role": "assistant",
-            "content": "Welcome to the Loan Risk Assessment System. Let's analyze the risk profile of the potential borrower. Would you like to proceed with the assessment?"
-        }
-    ]
+
+
 
 def show():
     apply_styles()
@@ -118,39 +87,46 @@ def show():
     )
     st.markdown('</div>', unsafe_allow_html=True)
 
+
+    # Initialize session state variables if they don't exist
     if "messages" not in st.session_state:
         st.session_state.messages = get_initial_messages()
-        st.session_state.collected_data = {}
         st.session_state.current_step = "start"
+        st.session_state.collected_data = {}
         
+    # Handle "Start New Conversation" button
+    if st.sidebar.button("Start New Conversation", key='reset_button'):
+        reset_conversation_state()
+        st.rerun()  # Force a complete rerun of the app
 
-    with st.sidebar:
-        if st.button("Start New Assessment",key='reset_button'):
-            reset_conversation_state()
-            st.rerun()
-
+    # Display chat messages
     for message in st.session_state.messages:
-        if message["role"] != "system":
+        if message["role"] != "system":  # Skip system messages
             with st.chat_message(message["role"]):
                 st.markdown(f'<div class="chat-message">{message["content"]}</div>', unsafe_allow_html=True)
 
-    if prompt := st.chat_input("Type your response here..."):
-        st.session_state.messages.append({"role": "user", "content": prompt.upper()})
+    # User input handling
+    prompt = st.chat_input("Type your message here...")
+    if prompt:
+        # Add user message to chat
+        st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"):
             st.markdown(f'<div class="chat-message">{prompt.upper()}</div>', unsafe_allow_html=True)
 
+
+        # Define tools for the model
         tools = [{
             "type": "function",
             "function": {
                 "name": "loan_eligibility",
-                "description": "Predict loan eligibility using the trained model",
+                "description": "Predict loan default risk using the trained model",
                 "parameters": {
                     "type": "object",
                     "properties": {
                         "person_age": {
                             "type": "integer",
                             "minimum": 18,
-                            "maximum": 80,
+                            "maximum": 100,
                             "description": "Age of the applicant"
                         },
                         "person_income": {
@@ -182,7 +158,7 @@ def show():
                         "loan_amnt": {
                             "type": "integer",
                             "minimum": 0,
-                            "description": "Requested loan amount in dollars"
+                            "description": "loan amount in dollars"
                         },
                         "loan_int_rate": {
                             "type": "number",
@@ -209,65 +185,80 @@ def show():
             }
         }]
 
-        try:
-            with st.chat_message("assistant"):
-                with st.spinner("Analyzing borrower details..."):
+        with st.chat_message("assistant"):
+            with st.spinner("Analysing..."):
+                try:
+                    # Get initial response from the model
                     response = client.chat.completions.create(
                         model=MODEL,
                         messages=[{"role": m["role"], "content": m["content"]} for m in st.session_state.messages],
+                        stream=False,
                         tools=tools,
                         tool_choice="auto",
                         max_tokens=4096,
                     )
 
-                    assistant_message = response.choices[0].message.content or "Analyzing borrower details..."
-                    st.markdown(f'<div class="chat-message">{assistant_message}</div>', unsafe_allow_html=True)
-                    st.session_state.messages.append({
-                        "role": "assistant",
-                        "content": assistant_message
-                    })
+                    response_message = response.choices[0].message
+                    tool_calls = response_message.tool_calls
 
-                    if response.choices[0].message.tool_calls:
-                        tool_call = response.choices[0].message.tool_calls[0]
-                        if tool_call.function.name == "loan_default_risk":
-                            arguments = json.loads(tool_call.function.arguments)
-                            
-                            if all(value is not None for value in arguments.values()):
-                                risk_result = get_loan_default_risk(**arguments)
-                                if "error" not in risk_result:
-                                    result_class = "risk-low" if not risk_result["default_risk"] else "risk-high"
-                                    result_message = f"""
+                    # Handle tool calls (loan eligibility prediction)
+                    if tool_calls:
+                        for tool_call in tool_calls:
+                            if tool_call.function.name == "loan_eligibility":
+                                function_args = json.loads(tool_call.function.arguments)
                                 
-                                    <div class="{result_class}">
-                                    📊 <strong>Risk Assessment Results</strong><br>
-                                    {"⚠️ High Default Risk" if risk_result["default_risk"] else "✅ Low Default Risk"}<br><br>
-                                    
-                                    <strong>Detailed Analysis:</strong><br>
-                                    - Age: {arguments['person_age']} years<br>
-                                    - Annual Income: ${arguments['person_income']:,}<br>
-                                    - Home Ownership: {arguments['person_home_ownership']}<br>
-                                    - Employment Length: {arguments['person_emp_length']} years<br>
-                                    - Loan Amount: ${arguments['loan_amnt']:,}<br>
-                                    - Interest Rate: {arguments['loan_int_rate']}%<br>
-                                    - Loan Purpose: {arguments['loan_intent']}<br>
-                                    - Loan Grade: {arguments['loan_grade']}<br>
-                                    - Credit History Length: {arguments['cb_person_cred_hist_length']} years<br>
-                                    - Previous Defaults: {"Yes" if arguments['cb_person_default_on_file'] == "Y" else "No"}<br>
-                                    </div>
-                                    """
-                                    st.markdown(result_message, unsafe_allow_html=True)
-                                    st.session_state.messages.append({
-                                        "role": "assistant",
-                                        "content": result_message
-                                    })
-                                    st.session_state.prediction_done = True
-                                else:
-                                    st.error(risk_result["error"])
+                                # Store the collected data
+                                st.session_state.collected_data = function_args
+                                
+                                # Get prediction
+                                function_response = get_loan_eligibility(**function_args)
 
-        except Exception as e:
-            error_message = f"I apologize, but I encountered an error: {str(e)}"
-            st.error(error_message)
-            st.session_state.messages.append({
-                "role": "assistant",
-                "content": error_message
-            })
+                                if "error" not in function_response:
+                                    if function_response["default_risk"] == False :
+                                        st.balloons()
+                                    result_message = f"""
+        
+                                    
+                                    📊 Risk Assessment Results
+                                    {"⚠️ High Default Risk" if function_response["default_risk"] else "✅ Low Default Risk"}
+                                
+
+                                    ### **Personal Details:**
+                                    - Age: {function_args['person_age']} years
+                                    - Income: ${function_args['person_income']:,}
+                                    - Home Ownership: {function_args['person_home_ownership']}
+                                    - Employment Length: {function_args['person_emp_length']} years
+
+                                    ### **Loan Details:**
+                                    - Loan Amount: ${function_args['loan_amnt']:,}
+                                    - Interest Rate: {function_args['loan_int_rate']}%
+                                    - Loan Purpose: {function_args['loan_intent']}
+                                    - Loan Grade: {function_args['loan_grade']}
+
+                                    ### **Credit Details:**
+                                    - Credit Default on File: {'Yes' if function_args['cb_person_default_on_file'] == 'Y' else 'No'}
+                                    - Credit History Length: {function_args['cb_person_cred_hist_length']} years
+                                    """
+                    
+                                else:
+                                    result_message = f"⚠️ Error: {function_response['error']}"
+
+                                st.markdown(result_message)
+                                st.session_state.messages.append({"role": "assistant", "content": result_message})
+
+                                # Get final response
+                                second_response = client.chat.completions.create(
+                                    model=MODEL,
+                                    messages=[*st.session_state.messages]
+                                )
+                                final_response = second_response.choices[0].message.content
+                                st.write(final_response)
+                                st.session_state.messages.append({"role": "assistant", "content": final_response})
+                    else:
+                        st.write(response_message.content)
+                        st.session_state.messages.append({"role": "assistant", "content": response_message.content})
+
+                except Exception as e:
+                    error_message = f"Sorry, I encountered an error: {str(e)}"
+                    st.error(error_message)
+                    st.session_state.messages.append({"role": "assistant", "content": error_message})

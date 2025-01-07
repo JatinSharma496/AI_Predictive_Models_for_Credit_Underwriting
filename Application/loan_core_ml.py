@@ -10,7 +10,6 @@ def load_model():
         st.error("Model file not found. Please ensure 'Model_pipeline.pkl' is in the correct directory.")
         return None
 
-
 def show():
     core_ml_apply_styles()
     
@@ -38,13 +37,11 @@ def show():
                 value=30,
                 help="Applicant's current age"
             )
-            
             home_ownership = st.selectbox(
                 "Home Ownership Status", 
                 ["RENT", "MORTGAGE", "OWN", "OTHER"],
                 help="Current housing situation"
             )
-            
             loan_amnt = st.number_input(
                 "Requested Loan Amount ($)", 
                 min_value=0, 
@@ -73,7 +70,6 @@ def show():
                 step=1000,
                 help="Applicant's annual income before taxes"
             )
-
             person_emp_length = st.number_input(
                 "Employment Length (years)", 
                 min_value=0, 
@@ -81,7 +77,6 @@ def show():
                 value=5,
                 help="Years at current employment"
             )
-            
             loan_int_rate = st.slider(
                 "Interest Rate (%)", 
                 min_value=0.0, 
@@ -90,15 +85,11 @@ def show():
                 step=0.1,
                 help="Annual interest rate for the loan"
             )
-        
-            
             loan_grade = st.selectbox(
                 "Loan Grade", 
                 ["A", "B", "C", "D", "E", "F", "G"],
                 help="Loan grade based on credit assessment"
             )
-            
-
             cb_person_default_on_file = st.selectbox(
                 "Previous Defaults", 
                 ["N", "Y"],
@@ -122,61 +113,30 @@ def show():
                 
                 prediction = model.predict(user_input)[0]
                 
-                st.markdown('<div class="section-header">📊 Risk Assessment Results</div>', unsafe_allow_html=True)
-                
                 if prediction == 0:
+                    st.balloons()  # Show a celebratory animation
+                    st.success("✅ Low Default Risk: The applicant shows good indicators for loan repayment.")
                     st.markdown(
-                        f'''
-                        <div class="risk-low">
-                            ✅ Low Default Risk
+                        """
+                        <div style="text-align:center;">
+                            🎉 Congratulations! 🎉
                             <br>
-                            <br>
-                            <small>The applicant shows good indicators for loan repayment</small>
+                            The risk assessment indicates a **low likelihood** of default.
                         </div>
-                        ''',
+                        """, 
                         unsafe_allow_html=True
                     )
                 else:
+                    st.warning("⚠️ High Default Risk: The applicant shows elevated risk indicators for default.")
                     st.markdown(
-                        f'''
-                        <div class="risk-high">
-                            ⚠️ High Default Risk
-                            <br> 
+                        """
+                        <div style="text-align:center;">
+                            🚨 Caution! 🚨
                             <br>
-                            <small>The applicant shows elevated risk indicators for default</small>
+                            The risk assessment indicates a **high likelihood** of default.
                         </div>
-                        ''',
+                        """, 
                         unsafe_allow_html=True
                     )
-                
-                '''
-                st.markdown("### Key Risk Factors")
-                col1, col2, col3 = st.columns(3)
-                
-                with col1:
-                    st.metric(
-                        "Debt-to-Income Ratio",
-                        f"{(loan_amnt / person_income * 100):.1f}%",
-                        delta="-Good" if (loan_amnt / person_income) < 0.3 else "+Concern",
-                        delta_color="normal"
-                    )
-                
-                with col2:
-                    st.metric(
-                        "Credit Grade",
-                        loan_grade,
-                        delta="-Good" if loan_grade in ['A', 'B'] else "+Concern",
-                        delta_color="normal"
-                    )
-                
-                with col3:
-                    st.metric(
-                        "Default History",
-                        "Yes" if cb_person_default_on_file == 'Y' else "No",
-                        delta="+Concern" if cb_person_default_on_file == 'Y' else "-Good",
-                        delta_color="normal"
-                    )
-                     '''
             except Exception as e:
                 st.error(f"Error during risk assessment: {e}")
-

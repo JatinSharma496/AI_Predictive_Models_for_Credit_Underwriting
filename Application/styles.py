@@ -1,5 +1,39 @@
 import streamlit as st
 
+def app_styles():
+    # Custom CSS for styling the sidebar
+    st.markdown("""
+        <style>
+            /* Sidebar styling */
+            [data-testid="stSidebar"] {
+                background-color: #2E4053;  /* Cool dark background */
+                color: #FFFFFF;  /* White text */
+                padding: 20px;
+            }
+            [data-testid="stSidebar"] h1 {
+                color: #F4D03F;  /* Golden title color */
+            }
+            [data-testid="stSidebar"] label {
+                font-size: 18px;  /* Larger font for labels */
+                font-weight: bold;  /* Bold font for labels */
+            }
+            [data-testid="stSidebar"] .css-1jxswup {  /* Custom class for radio buttons */
+                color: #AED6F1;  /* Light blue text */
+            }
+            /* Sidebar hover effect for radio options */
+            [data-testid="stSidebar"] .css-1jxswup:hover {
+                color: #F5B041;  /* Orange on hover */
+                cursor: pointer;
+            }
+            /* Make the sidebar more rounded and modern */
+            [data-testid="stSidebar"] {
+                border-radius: 10px;
+                box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            }
+        </style>
+    """, unsafe_allow_html=True)
+
+
 def apply_styles():
     st.markdown("""
         <style>

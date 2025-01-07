@@ -1,6 +1,5 @@
-Here's the updated version of the `README.md` for the loan default prediction project with the chatbot details included:
 
-```markdown
+
 ---
 
 # AI Predictive Models for Loan Default Prediction

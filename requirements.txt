@@ -1,11 +1,12 @@
 numpy
 pandas
-scikit-learn
+scikit-learn==1.5.1
+
 catboost
 seaborn
 flask
 streamlit
 ipykernel
-lightgbm
+lightgbm==4.2.0
 groq
 python-dotenv

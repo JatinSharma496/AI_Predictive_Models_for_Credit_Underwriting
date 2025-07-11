@@ -2,14 +2,18 @@ import streamlit as st
 import pandas as pd
 import pickle
 from styles import core_ml_apply_styles
-
+import os
 def load_model():
     try:
-        return pickle.load(open('Application/Model_pipeline.pkl', 'rb'))
+        current_dir = os.path.dirname(__file__)  # directory of loan_core_ml.py
+        model_path = os.path.join(current_dir, "Model_pipeline.pkl")
+        return pickle.load(open(model_path, 'rb'))
     except FileNotFoundError:
-        st.error("Model file not found. Please ensure 'Model_pipeline.pkl' is in the correct directory.")
+        st.error("❌ Model file not found. Please ensure 'Model_pipeline.pkl' is in the same folder as 'loan_core_ml.py'.")
         return None
-
+    except Exception as e:
+        st.error(f"❌ Unexpected error loading model: {e}")
+        return None
 def show():
     core_ml_apply_styles()
     

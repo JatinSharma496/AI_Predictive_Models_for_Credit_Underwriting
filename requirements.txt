@@ -10,3 +10,4 @@ ipykernel
 lightgbm==4.2.0
 groq
 python-dotenv
+google-generativeai

@@ -8,7 +8,7 @@ from styles import apply_styles
 from chatbot_prompt import get_initial_messages
 
 
-client = Groq(api_key="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")  
+client = Groq(api_key="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")  
 MODEL = 'llama-3.3-70b-versatile'
 
 

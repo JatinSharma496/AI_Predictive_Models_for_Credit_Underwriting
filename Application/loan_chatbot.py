@@ -8,9 +8,11 @@ from styles import apply_styles
 from chatbot_prompt import get_initial_messages
 
 
-client = Groq(api_key="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")  
-MODEL = 'llama-3.3-70b-versatile'
+# Load API key securely from Streamlit secrets
+api_key = st.secrets["GROQ_API_KEY"]
 
+client = Groq(api_key=api_key)
+MODEL = "llama3-70b-8192" 
 
 @st.cache_resource
 def load_model():

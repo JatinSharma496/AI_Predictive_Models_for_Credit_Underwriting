@@ -6,7 +6,7 @@ test.py
 app2.py
 # C extensions
 *.so
-
+.streamlit/secrets.toml
 # Distribution / packaging
 .Python
 build/

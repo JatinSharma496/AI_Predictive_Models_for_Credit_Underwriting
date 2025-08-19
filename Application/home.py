@@ -85,9 +85,4 @@ def show():
     **Choose an option from the sidebar to begin your journey:**  
     """)
 
-    st.image(
-        "Images/Homepage.jpg", 
-        use_container_width=True, 
-        caption="Simplify financial decisions with AI.",
-        output_format="JPEG"
-    )
+    

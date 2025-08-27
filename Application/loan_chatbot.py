@@ -7,7 +7,7 @@ import os
 from styles import apply_styles
 from chatbot_prompt import get_initial_messages
 
-
+   
 # Load API key securely from Streamlit secrets
 api_key = st.secrets["GROQ_API_KEY"]
 
